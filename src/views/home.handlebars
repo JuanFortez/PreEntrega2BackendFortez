@@ -1,0 +1,18 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Product List</title>
+  </head>
+  <body>
+    <h1>Lista de Productos</h1>
+    <ul id="product-list">
+        <li>{{this.name}} - {{this.price}}</li>
+    </ul>
+
+    <a href="/realtimeproducts">Ver Productos en Tiempo Real</a>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+  </body>
+</html>
