@@ -3,7 +3,7 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import viewRouter from "./routes/view.router.js";
-import ProductManager from "./ProductManager.js";
+import ProductManager from "./public/js/ProductManager.js";
 
 const app = express();
 const PORT = process.env.PORT || 9090;
