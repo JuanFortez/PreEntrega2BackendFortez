@@ -3,6 +3,7 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import viewRouter from "./routes/view.router.js";
+import ProductManager from "./ProductManager.js";
 
 const app = express();
 const PORT = process.env.PORT || 9090;
@@ -24,24 +25,24 @@ const httpServer = app.listen(PORT, () => {
 
 const socketServer = new Server(httpServer);
 
-const products = [];
-socketServer.on("connection", (socket) => {
+const productManager = new ProductManager();
+
+socketServer.on("connection", async (socket) => {
   console.log("Cliente conectado");
 
+  const products = await productManager.getAllProducts();
   socket.emit("productList", products);
 
-  socket.on("addProduct", (product) => {
+  socket.on("addProduct", async (product) => {
     console.log("Producto agregado", product);
-    //TODO: Agregar producto a la lista de productos por medio de la clase ProductManager
-    //TODO: ProductManager.getAllProducts
-    products.push(product);
-    socketServer.emit("productAdded", products);
+    await productManager.addProduct(product);
+    const updatedProducts = await productManager.getAllProducts();
+    socketServer.emit("productAdded", updatedProducts);
   });
 
-  socket.on("deleteProduct", (productId) => {
-    const index = products.findIndex((p) => p.id === productId);
-    if (index !== -1) {
-      const [deletedProduct] = products.splice(index, 1);
+  socket.on("deleteProduct", async (productId) => {
+    const deletedProduct = await productManager.deleteProduct(productId);
+    if (deletedProduct) {
       socketServer.emit("productDeleted", deletedProduct);
     }
   });

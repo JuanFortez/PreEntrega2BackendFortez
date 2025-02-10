@@ -2,11 +2,11 @@ const socket = io();
 
 function renderProducts(products) {
   const productList = document.getElementById("product-list");
-  productList.innerHTML = ""; // Limpia la lista
+  productList.innerHTML = ""; 
 
   products.forEach((product) => {
     const li = document.createElement("li");
-    li.id = product.id; // Asigna el id único
+    li.id = product.id; 
     li.textContent = `${product.name} - ${product.price}`;
 
     if (document.getElementById("product-form")) {
@@ -20,7 +20,6 @@ function renderProducts(products) {
   });
 }
 
-// Escucha eventos del servidor
 socket.on("productList", (products) => {
   renderProducts(products);
 });
@@ -36,12 +35,8 @@ socket.on("productDeleted", (deletedProduct) => {
   }
 });
 
-// Manejo del formulario
-document
-  .getElementById("product-form")
-  .addEventListener("submit", function (event) {
+document.getElementById("product-form").addEventListener("submit", function (event) {
     event.preventDefault();
-
     const productNameElement = document.getElementById("product-name");
     const productPriceElement = document.getElementById("product-price");
 
@@ -58,16 +53,14 @@ document
       return;
     }
 
-    const productId = Date.now().toString(); // Genera un id único
+    const productId = Date.now().toString(); 
 
-    // Emite el evento al servidor
     socket.emit("addProduct", {
       name: productName,
       price: productPrice,
       id: productId,
     });
 
-    // Limpia el formulario
     productNameElement.value = "";
     productPriceElement.value = "";
   });
@@ -77,7 +70,6 @@ function deleteProduct(productId) {
     if (response.error) {
       alert("Error al eliminar el producto: " + response.error);
     } else {
-      // Eliminar del DOM
       const productElement = document.getElementById(productId);
       if (productElement) {
         productElement.remove();
